@@ -1,6 +1,8 @@
+require('dotenv').config()
+
 const fastify = require('fastify')({ logger: true })
 
-fastify.decorate('db', require('./decorators/mongo'))
+fastify.decorate('db', require('./decorators/mongo.js'))
 fastify.decorate('auth', require('./decorators/jwt'))
 
 fastify.register(require('fastify-cors'), { origin: '*' })

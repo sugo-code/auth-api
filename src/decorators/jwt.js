@@ -5,11 +5,11 @@ const refresh_token_expire = '7d'
 
 const records = {}
 
-const authenticate = async (username, permissions) => {
+const authenticate = async (username, role) => {
 
     try {
         const refresh_token = jwt.sign({ username, type: 'refresh' }, secret, { expiresIn: refresh_token_expire })
-        const access_token = jwt.sign({ username, permissions, type: 'access' }, secret, { expiresIn: access_token_expire })
+        const access_token = jwt.sign({ username, role, type: 'access' }, secret, { expiresIn: access_token_expire })
 
         if (!Array.isArray(records[username])) records[username] = []
 
@@ -23,15 +23,12 @@ const authenticate = async (username, permissions) => {
 
 }
 
-const refresh = async (authHeader) => {
+const refresh = async (user, permissions) => {
 
     try {
-        const refresh_token = authHeader.split(' ')[1]
-        const decoded = jwt.verify(refresh_token, secret)
-
-        if (!Array.isArray(records[decoded.username]) || !records[decoded.username].includes(refresh_token)) throw 'Refresh token not found'
-
-        const access_token = jwt.sign({ username: decoded.username, permissions: decoded.permissions, type: 'access' }, secret, { expiresIn: access_token_expire })
+        const username = user.username
+        const role = permissions.role
+        const access_token = jwt.sign({ username, role, type: 'access' }, secret, { expiresIn: access_token_expire })
 
         return { access_token }
 
