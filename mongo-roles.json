@@ -1,0 +1,4 @@
+[
+  {"name": "admin", "permissions": ["read", "create", "update"]}
+]
+
