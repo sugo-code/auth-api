@@ -9,8 +9,8 @@ const records = {}
 const authenticate = async (username, permissions) => {
 
     try {
-        const refresh_token = jwt.sign({ username, type: 'refresh' }, secret, { expiresIn: refresh_token_expire })
-        const access_token = jwt.sign({ username, permissions, type: 'access' }, secret, { expiresIn: access_token_expire })
+        const refresh_token = jwt.sign({ username, permissions, type: 'refresh' }, secret, { expiresIn: refresh_token_expire })
+        const access_token  = jwt.sign({ username, permissions, type: 'access'  }, secret, { expiresIn: access_token_expire })
 
         if (!Array.isArray(records[username])) records[username] = []
 
