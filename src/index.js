@@ -6,7 +6,7 @@ fastify.decorate('db', require('./decorators/mongo.js'))
 fastify.decorate('auth', require('./decorators/jwt'))
 
 fastify.register(require('fastify-cors'), { origin: '*' })
-fastify.register(require('./routes/auth'), { prefix: 'auth' })
+fastify.register(require('./routes/auth'))
 
 fastify.listen(3000, '0.0.0.0', (err, address) => {
     if (err) {
