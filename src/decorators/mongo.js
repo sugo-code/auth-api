@@ -2,7 +2,7 @@ const mongo = require('mongodb');
 const MongoClient = mongo.MongoClient;
 const ObjectID = mongo.ObjectID;
 
-const client = new MongoClient('mongodb://localhost:27017');
+const client = new MongoClient(process.env.MONGO_URI);
 
 const getDb = async () => {
     await client.connect();
