@@ -12,34 +12,34 @@ module.exports = async (fastify, options) => {
         if (!user) return res.status(401).send()
 
         const hash = crypto.createHash('sha512').update(req.body.password).digest('hex')
-        if (hash != user.password) return res.status(401).send()
+        if (hash != user.hash) return res.status(401).send()
 
-        const role = await service.roles.getByRole(user.role)
-
-        return await auth.authenticate(user.username, role.role)
+        const role = await service.roles.getByName(user.role)
+   
+        return await auth.authenticate(user.username, role.permissions)
     })
 
-    fastify.post('/logout', async (req, res) => {
+    fastify.post('/logout', {schema: {headers: refreshValidator.schema.headers}}, async (req, res) => {
 
-        if (user) return res.status(409).send()
+        const success = await auth.deauthorize(req.headers.authorization)
+        if(!success) return res.status(410).send()
 
-        const hash = crypto.createHash('sha512').update(req.body.password).digest('hex')
-        const created = await service.users.create({ username: req.body.username, password: hash })
-        if (!created) return res.status(500).send()
-
-        return res.status(201).send()
+        return res.status(204).send()
     })
 
     fastify.post('/refresh', refreshValidator, async (req, res) => {
 
-        const user = await auth.authorize(req.headers.authorization)
-
-        const username = await service.users.getByUsername(user)
-        const role = await service.roles.getByRole(username.role)
-
-        const refreshed = await auth.refresh(username, role)
-        if (!refreshed) return res.status(400).send()
+        const refreshed = await auth.refresh(req.headers.authorization)
+        if (!refreshed) return res.status(410).send()
 
         return refreshed
+    })
+
+    fastify.get('/verify', {schema: {headers: refreshValidator.schema.headers}}, async (req, res) => {
+
+        const verified = await auth.authorize(req.headers.authorization)
+        if (!verified) return res.status(401).send()
+
+        return res.status(200).send()
     })
 }

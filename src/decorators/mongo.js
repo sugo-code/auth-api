@@ -6,16 +6,13 @@ const client = new MongoClient(process.env.MONGO_URI);
 
 const getDb = async () => {
     await client.connect();
-    return client.db('test1');
+    return client.db(process.env.MONGO_DB);
 }
 
 const getByUsername = async (username) => {
     const db = await getDb();
     const userCollection = db.collection('users');
-    const user = await userCollection.findOne({
-        username: username.trim()
-    });
-    user.id = user._id;
+    const user = await userCollection.findOne({username});
     return user;
 }
 
@@ -27,13 +24,10 @@ const addUser = async (user) => {
 }
 */
 
-const getByRole = async (role) => {
+const getByName = async (name) => {
     const db = await getDb();
     const roleCollection = db.collection('roles');
-    const userrole = await roleCollection.findOne({
-        role: role.trim()
-    });
-    userrole.id = userrole._id;
+    const userrole = await roleCollection.findOne({name});
     return userrole;
 }
 
@@ -42,6 +36,6 @@ module.exports = {
         getByUsername,
     },
     roles: {
-        getByRole
+        getByName
     }
 };
