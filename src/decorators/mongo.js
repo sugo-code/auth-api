@@ -31,9 +31,17 @@ const getByName = async (name) => {
     return userrole;
 }
 
+const getAdmins = async () => {
+    const db = await getDb();
+    const usersCollection = db.collection('users');
+    const adminList = await usersCollection.find({role: 'admin'}).project({username: 1, email: 1, phone: 1, _id:0}).toArray()
+    return adminList;
+}
+
 module.exports = {
     users: {
         getByUsername,
+        getAdmins,
     },
     roles: {
         getByName
