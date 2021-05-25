@@ -1,0 +1,12 @@
+version: 0.0
+os: linux
+files:
+  - source: .
+    destination: /home/ec2-user/app
+hooks:
+  ApplicationStop:
+    - location: aws/scripts/stop.sh
+  AfterInstall:
+    - location: aws/scripts/secrets.sh
+  ApplicationStart:
+    - location: aws/scripts/start.sh
