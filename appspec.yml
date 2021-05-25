@@ -6,5 +6,7 @@ files:
 hooks:
   ApplicationStop:
     - location: aws/scripts/stop.sh
+  AfterInstall:
+    - location: aws/scripts/secrets.sh
   ApplicationStart:
     - location: aws/scripts/start.sh
