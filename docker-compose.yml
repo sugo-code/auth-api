@@ -6,20 +6,11 @@ services:
     build: .
     ports:
       - 80:3000
-    depends_on:
-      - auth-db
     restart: unless-stopped
     environment: 
       PORT:         3000
-      MONGO_URI:    mongodb://root:example@auth-db:27017
-      MONGO_DB:     db
+      MONGO_URI:    ${MONGO_URI:?MONGO_URI is missing}
+      MONGO_DB:     ${MONGO_DB:?MONGO_DB is missing}
       RABBITMQ_URL: ${RABBITMQ_URL:?RABBITMQ_URL is missing}
       JWT_SECRET:   ${JWT_SECRET:?JWT_SECRET is missing}
 
-  auth-db:
-    image: mongo
-    restart: unless-stopped
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_ROOT_DATABASE: db
