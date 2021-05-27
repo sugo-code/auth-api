@@ -13,4 +13,9 @@ services:
       MONGO_DB:     ${MONGO_DB:?MONGO_DB is missing}
       RABBITMQ_URL: ${RABBITMQ_URL:?RABBITMQ_URL is missing}
       JWT_SECRET:   ${JWT_SECRET:?JWT_SECRET is missing}
-
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ${LOG_REGION:?LOG_REGION is missing}
+        awslogs-group:  ${LOG_GROUP:?LOG_GROUP is missing}
+        mode:           non-blocking
